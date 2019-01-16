@@ -34,7 +34,6 @@ app.use((req, res, next) => {
 });
 
 app.use(function(req, res, next) {
-    console.log(req.session);
     if (!req.session.userId && req.url != "/register" && req.url != "/login") {
         res.redirect("/register");
     } else {
@@ -66,6 +65,20 @@ const requireNoSignature = (req, res, next) => {
     }
 };
 
+//make sure all urls start with http:// or https:// or //
+function checkUrl(body) {
+    console.log(body);
+    if (
+        body.homepage.startsWith("https://") ||
+        body.homepage.startsWith("http://") ||
+        body.homepage.startsWith("//")
+    ) {
+        return body.homepage;
+    } else {
+        return "http://".concat(body.homepage);
+    }
+}
+
 app.get("/register", requireLoggedOutUser, (req, res) => {
     res.render("register", {
         layout: "main"
@@ -89,7 +102,7 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
                 first: req.body.first,
                 last: req.body.last
             };
-            res.redirect("/login");
+            res.redirect("/profile");
         })
         .catch(err => {
             console.log(err);
@@ -116,8 +129,9 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
             return bcrypt.compare(req.body.password, data.rows[0].password);
         })
         .then(bool => {
+            console.log(bool);
             if (bool == true) {
-                return db.getSignatureId(user.id);
+                return db.getSignatureId(user.id); //no longer needed: just modify query above with join and get signatureid, remember tu use AS
             } else {
                 throw new Error();
             }
@@ -143,6 +157,25 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
         });
 });
 
+app.get("/profile", (req, res) => {
+    res.render("profile", {
+        layout: "main"
+    });
+});
+
+app.post("/profile", (req, res) => {
+    var goodUrl = checkUrl(req.body);
+    if (req.body.age == "") {
+        db.addProfile(null, req.body.city, goodUrl, req.session.userId)
+            .then(() => res.redirect("/petition"))
+            .catch(err => console.log(err));
+    } else {
+        db.addProfile(req.body.age, req.body.city, goodUrl, req.session.userId)
+            .then(() => res.redirect("/petition"))
+            .catch(err => console.log(err));
+    }
+});
+
 app.get("/petition", requireNoSignature, (req, res) => {
     res.render("petition", {
         layout: "main"
@@ -150,15 +183,8 @@ app.get("/petition", requireNoSignature, (req, res) => {
 });
 
 app.post("/petition", (req, res) => {
-    console.log(req.body.signature);
-    db.addSigners(
-        req.session.first,
-        req.session.last,
-        req.session.userId,
-        req.body.signature
-    )
+    db.addSigners(req.session.userId, req.body.signature)
         .then(val => {
-            console.log(val.rows[0]);
             req.session.signatureId = val.rows[0].id;
             res.redirect("/petition/thanks");
         })
@@ -189,11 +215,25 @@ app.get("/petition/thanks", requireSignature, (req, res) => {
 });
 
 app.get("/petition/signers", requireSignature, (req, res) => {
-    db.getSigners()
+    db.getProfile()
         .then(data => {
             res.render("signers", {
-                signers: data.rows,
-                layout: "main"
+                layout: "main",
+                signers: data.rows
+            });
+        })
+        .catch(err => console.log(err));
+});
+
+app.get("/petition/signers/:city", (req, res) => {
+    const city = req.params.city;
+    console.log(city);
+    db.getCity(city)
+        .then(data => {
+            console.log(data.rows);
+            res.render("city", {
+                layout: "main",
+                signers: data.rows
             });
         })
         .catch(err => console.log(err));

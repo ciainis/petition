@@ -4,9 +4,21 @@
 
 <div class="thanks-text">
     <p>Concerts are better without The Tall Guy! Here is the list of people who already signed the petition for Tall-Guy-free shows:</p>
+
     <div id="signers">
+
         {{#each signers}}
-        <p>{{this.first}} {{this.last}}</p>
+
+        {{#if this.url}}
+
+        <p><a href="{{this.url}}">{{this.first}} {{this.last}}</a> {{this.age}} <a href="/petition/signers/{{this.city}}">{{this.city}}</a></p>
+
+        {{else}}
+
+        <p>{{this.first}} {{this.last}} {{this.age}} <a href="/petition/signers/{{this.city}}">{{this.city}}</a></p>
+        
+        {{/if}}
+
         {{/each}}
     </div>
 </div>
