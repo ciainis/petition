@@ -1,0 +1,9 @@
+<p>please log-in</p>
+{{#if err}}
+<p id="error">Oops... something went wrong! Please sign again or <a href="/register">register</a>.</p>
+{{/if}}
+<form method="POST">
+    <input type="text" name="email" placeholder="E-mail address">
+    <input type="text" name="password" placeholder="Password">
+    <button name="log-in">LOGIN</button>
+</form>

@@ -1,0 +1,13 @@
+<p>please join our campaign</p>
+{{#if err}}
+<p id="error">Oops... something went wrong! Please sign again.</p>
+{{/if}}
+<form method="POST">
+    <input type="text" name="first" placeholder="Fist Name">
+    <input type="text" name="last" placeholder="Last Name">
+    <input type="text" name="email" placeholder="E-mail address">
+    <input type="text" name="password" placeholder="Password">
+    <button name="sign-up">SIGN UP</button>
+</form>
+
+<p>If you are already registered, please <a href="/login">login</a>.</p>

@@ -1,6 +1,5 @@
 if ($("#canvas")[0]) {
     var context = $("#canvas")[0].getContext("2d");
-    var signature = $("#canvas")[0].toDataURL();
     context.strokeStyle = "black";
     context.lineWidth = 2;
 
@@ -16,6 +15,7 @@ if ($("#canvas")[0]) {
     $("#canvas").on("mousemove", sign);
 
     $("#canvas").on("mouseup", () => {
+        var signature = $("#canvas")[0].toDataURL();
         isSigning = false;
         $("#input-sign").attr("value", signature);
     });
