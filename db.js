@@ -122,3 +122,15 @@ module.exports.updateUserProfiles = function(age, city, url, userId) {
         [age, city, url, userId]
     );
 };
+
+module.exports.deleteSignature = function(userId) {
+    return db.query(
+        `DELETE FROM signatures
+        WHERE user_id = $1`,
+        [userId]
+    );
+};
+
+module.exports.deleteProfile = function(userId) {
+    return db.query(`DELETE FROM users WHERE id = $1`, [userId]);
+};
