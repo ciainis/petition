@@ -66,18 +66,23 @@ const requireNoSignature = (req, res, next) => {
 };
 
 //make sure all urls start with http:// or https:// or //
-function checkUrl(body) {
-    console.log(body);
-    if (
-        body.homepage.startsWith("https://") ||
-        body.homepage.startsWith("http://") ||
-        body.homepage.startsWith("//")
-    ) {
-        return body.homepage;
-    } else {
-        return "http://".concat(body.homepage);
+var checkUrl = function(url) {
+    if (url != "") {
+        if (
+            url.startsWith("https://") ||
+            url.startsWith("http://") ||
+            url.startsWith("//")
+        ) {
+            return url;
+        } else {
+            return "http://".concat(url);
+        }
     }
-}
+};
+
+var lowCaseCity = function(city) {
+    return city.toLowerCase();
+};
 
 app.get("/register", requireLoggedOutUser, (req, res) => {
     res.render("register", {
@@ -120,33 +125,20 @@ app.get("/login", requireLoggedOutUser, (req, res) => {
 });
 
 app.post("/login", requireLoggedOutUser, (req, res) => {
-    let user = {};
-    db.verifyPassword(req.body.email)
+    db.verifyPasswordAndGetSignatureId(req.body.email)
         .then(data => {
-            user.id = data.rows[0].id;
-            user.first = data.rows[0].first;
-            user.last = data.rows[0].last;
+            req.session = {
+                userId: data.rows[0].id,
+                first: data.rows[0].first,
+                last: data.rows[0].last,
+                signatureId: data.rows[0].signatureId
+            };
             return bcrypt.compare(req.body.password, data.rows[0].password);
         })
         .then(bool => {
-            console.log(bool);
             if (bool == true) {
-                return db.getSignatureId(user.id); //no longer needed: just modify query above with join and get signatureid, remember tu use AS
-            } else {
-                throw new Error();
+                res.redirect("/petition");
             }
-        })
-        .then(data => {
-            console.log(data);
-            if (data.rows[0]) {
-                req.session = {
-                    userId: user.id,
-                    first: user.first,
-                    last: user.last,
-                    signatureId: data.rows[0].id
-                };
-            }
-            res.redirect("/petition");
         })
         .catch(err => {
             console.log(err);
@@ -164,13 +156,20 @@ app.get("/profile", (req, res) => {
 });
 
 app.post("/profile", (req, res) => {
-    var goodUrl = checkUrl(req.body);
+    var goodUrl = checkUrl(req.body.homepage);
+    var loweredCaseCity = lowCaseCity(req.body.city);
+
     if (req.body.age == "") {
-        db.addProfile(null, req.body.city, goodUrl, req.session.userId)
+        db.addProfile(null, loweredCaseCity, goodUrl, req.session.userId)
             .then(() => res.redirect("/petition"))
             .catch(err => console.log(err));
     } else {
-        db.addProfile(req.body.age, req.body.city, goodUrl, req.session.userId)
+        db.addProfile(
+            req.body.age,
+            loweredCaseCity,
+            goodUrl,
+            req.session.userId
+        )
             .then(() => res.redirect("/petition"))
             .catch(err => console.log(err));
     }

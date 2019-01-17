@@ -11,7 +11,7 @@ module.exports.addSigners = function(user_id, signature) {
 };
 
 module.exports.getSigners = function() {
-    return db.query(`SELECT * FROM signatures`);
+    return db.query(`SELECT id, user_id, created_at FROM signatures`);
 };
 
 module.exports.getProfile = function() {
@@ -65,5 +65,16 @@ module.exports.getCity = function(userCity) {
         ON users.id = signatures.user_id
         WHERE LOWER(city) = LOWER($1)`,
         [userCity]
+    );
+};
+
+module.exports.verifyPasswordAndGetSignatureId = function(email) {
+    return db.query(
+        `SELECT users.id, users.first, users.last, users.password, signatures.id AS "signatureId"
+        FROM users
+        JOIN signatures
+        ON users.id = signatures.user_id
+        WHERE users.email = $1`,
+        [email]
     );
 };

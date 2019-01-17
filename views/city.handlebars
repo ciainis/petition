@@ -4,6 +4,14 @@
 
 {{#each signers}}
 
+{{#if this.url}}
+
+<p><a href="{{this.url}}">{{this.first}} {{this.last}}</a> {{this.age}}</p>
+
+{{else}}
+
 <p>{{this.first}} {{this.last}} {{this.age}}</p>
+
+{{/if}}
 
 {{/each}}
