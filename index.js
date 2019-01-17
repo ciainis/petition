@@ -232,10 +232,70 @@ app.get("/petition/signers/:city", (req, res) => {
             console.log(data.rows);
             res.render("city", {
                 layout: "main",
-                signers: data.rows
+                signers: data.rows,
+                city: city
             });
         })
         .catch(err => console.log(err));
+});
+
+app.get("/profile/edit", (req, res) => {
+    //console.log(req.session.userId);
+    db.getProfileInfo(req.session.userId)
+        .then(data => {
+            //console.log(data);
+            res.render("edit_profile", {
+                layout: "main",
+                first: data.rows[0].first,
+                last: data.rows[0].last,
+                email: data.rows[0].email,
+                age: data.rows[0].age,
+                city: data.rows[0].city,
+                url: data.rows[0].url
+            });
+        })
+        .catch(err => console.log(err));
+});
+
+app.post("/profile/edit", (req, res) => {
+    if (req.body.password != "") {
+        bcrypt.hash(req.body.password).then(hash => {
+            Promise.all([
+                db.updateUsers(
+                    req.body.first,
+                    req.body.last,
+                    req.body.email,
+                    hash,
+                    req.session.userId
+                ),
+                db.updateUserProfiles(
+                    req.body.age,
+                    req.body.city,
+                    req.body.url,
+                    req.session.userId
+                )
+            ])
+                .then(() => res.redirect("/petition/signers"))
+                .catch(err => console.log(err));
+        });
+    } else {
+        Promise.all([
+            db.updateUsersNoPass(
+                req.body.first,
+                req.body.last,
+                req.body.email,
+                req.session.userId
+            ),
+            db.updateUserProfiles(
+                req.body.age,
+                req.body.city,
+                req.body.url,
+                req.session.userId
+            )
+        ])
+            .then(() => res.redirect("/petition/signers"))
+            .catch(err => console.log(err));
+    }
 });
 
 app.get("/logout", (req, res) => {
