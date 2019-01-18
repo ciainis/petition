@@ -6,7 +6,7 @@ const cookieSession = require("cookie-session");
 // const csurf = require("csurf");
 
 let giphyKey;
-if (process.enb.giphyKey) {
+if (process.env.giphyKey) {
     giphyKey = process.env.giphyKey;
 } else {
     giphyKey = require("./secrets.json").giphyKey;
