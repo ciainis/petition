@@ -1,6 +1,13 @@
 const spicedPg = require("spiced-pg");
 const { dbUser, dbPass } = require("./secrets.json");
-const db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/funkyduck`);
+// const db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/funkyduck`);
+
+let db;
+if (process.env.DATABASE_URL) {
+    db = spicedPg(process.env.DATABASE_URL);
+} else {
+    db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/funkyduck`);
+}
 
 module.exports.addSigners = function(user_id, signature) {
     return db.query(
