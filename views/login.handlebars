@@ -5,5 +5,6 @@
 <form method="POST">
     <input type="text" name="email" placeholder="E-mail address">
     <input type="text" name="password" placeholder="Password">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button name="log-in">LOGIN</button>
 </form>

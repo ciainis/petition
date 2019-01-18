@@ -8,9 +8,11 @@
     <input type="text" name="age" value="{{age}}">
     <input type="text" name="city" value="{{city}}">
     <input type="text" name="url" value="{{url}}">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button>UPDATE YOUR ACCOUNT</button>
 </form>
 
 <form action="/profile/delete" method="POST">
     <button name="delete-signature">DELETE YOUR ACCOUNT</button>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
 </form>

@@ -80,7 +80,7 @@ module.exports.verifyPasswordAndGetSignatureId = function(email) {
     return db.query(
         `SELECT users.id, users.first, users.last, users.password, signatures.id AS "signatureId"
         FROM users
-        JOIN signatures
+        LEFT JOIN signatures
         ON users.id = signatures.user_id
         WHERE users.email = $1`,
         [email]
@@ -142,3 +142,5 @@ module.exports.deleteSignature = function(userId) {
 module.exports.deleteProfile = function(userId) {
     return db.query(`DELETE FROM users WHERE id = $1`, [userId]);
 };
+
+module;

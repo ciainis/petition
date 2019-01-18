@@ -3,7 +3,7 @@ const app = express();
 
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
-// const csurf = require("csurf");
+const csurf = require("csurf");
 
 let giphyKey;
 if (process.env.giphyKey) {
@@ -11,7 +11,7 @@ if (process.env.giphyKey) {
 } else {
     giphyKey = require("./secrets.json").giphyKey;
 }
-// const { giphyKey } = require("./secrets.json");
+
 const giphy = require("giphy-api")(`${giphyKey}`);
 
 var hb = require("express-handlebars");
@@ -30,7 +30,12 @@ app.use(
     })
 );
 
-// app.use(csurf());
+app.use(csurf());
+
+app.use(function(req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
 
 app.use(express.static(__dirname + "/static"));
 
@@ -86,6 +91,7 @@ var checkUrl = function(url) {
     }
 };
 
+//make sure that loweredcase cities are entered in the database
 var lowCaseCity = function(city) {
     return city.toLowerCase();
 };
@@ -133,12 +139,21 @@ app.get("/login", requireLoggedOutUser, (req, res) => {
 app.post("/login", requireLoggedOutUser, (req, res) => {
     db.verifyPasswordAndGetSignatureId(req.body.email)
         .then(data => {
-            req.session = {
-                userId: data.rows[0].id,
-                first: data.rows[0].first,
-                last: data.rows[0].last,
-                signatureId: data.rows[0].signatureId
-            };
+            console.log(data);
+            if (data.rows[0].signatureId) {
+                req.session = {
+                    userId: data.rows[0].id,
+                    first: data.rows[0].first,
+                    last: data.rows[0].last,
+                    signatureId: data.rows[0].signatureId
+                };
+            } else {
+                req.session = {
+                    userId: data.rows[0].id,
+                    first: data.rows[0].first,
+                    last: data.rows[0].last
+                };
+            }
             return bcrypt.compare(req.body.password, data.rows[0].password);
         })
         .then(bool => {
