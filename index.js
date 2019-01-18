@@ -5,7 +5,13 @@ const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 // const csurf = require("csurf");
 
-const { giphyKey } = require("./secrets.json");
+let giphyKey;
+if (process.enb.giphyKey) {
+    giphyKey = process.env.giphyKey;
+} else {
+    giphyKey = require("./secrets.json").giphyKey;
+}
+// const { giphyKey } = require("./secrets.json");
 const giphy = require("giphy-api")(`${giphyKey}`);
 
 var hb = require("express-handlebars");
