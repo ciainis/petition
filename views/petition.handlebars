@@ -2,21 +2,19 @@
 
 <h1>Sign our petition to ban the The Tall Guy from all concerts!</h1>
 
-<img src="/the-tall-guy.jpg" alt="The Tall Guy">
+<img src="/the-tall-guy-ban.jpg" alt="The Tall Guy">
 
 <div class="petition-text">
-    <p>Concerts are fun, but they always come with one major problem: The Tall Guy that stands in front of you. With this petition we want to obtain his immediate ban from any live concerts. Please sign below.</p>
+    <p>Please sign our petition to obtain the immediate ban of The Tall Guy from any live concerts.</p>
     <form method="POST">
+
         {{#if err}}
         <p id="error">Oops... something went wrong! Please sign again.</p>
         {{/if}}
-        <!-- <div>
-            <input name="first" placeholder="Your first name" autocomplete="off">
-            <input name="second" placeholder="Your last name" autocomplete="off">
-        </div> -->
-        <input id="input-sign" type="hidden" name="signature">
-        <canvas class="form-elem" id="canvas" height="100px" width="340px"></canvas>
+
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <canvas class="form-elem" id="canvas" height="100px" width="340px"></canvas>
+        <input id="input-sign" type="hidden" name="signature">
         <button class="form-elem">SUBMIT</button>
     </form>
 </div>

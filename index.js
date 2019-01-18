@@ -47,6 +47,11 @@ app.use((req, res, next) => {
 app.use(function(req, res, next) {
     if (!req.session.userId && req.url != "/register" && req.url != "/login") {
         res.redirect("/register");
+    } else if (
+        (req.url == "/profile/" || req.url == "/profile") &&
+        req.session.justRegistered == false
+    ) {
+        res.redirect("/profile/edit");
     } else {
         next();
     }
@@ -117,7 +122,8 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
             req.session = {
                 userId: data.rows[0].id,
                 first: req.body.first,
-                last: req.body.last
+                last: req.body.last,
+                justRegistered: true
             };
             res.redirect("/profile");
         })
@@ -139,7 +145,6 @@ app.get("/login", requireLoggedOutUser, (req, res) => {
 app.post("/login", requireLoggedOutUser, (req, res) => {
     db.verifyPasswordAndGetSignatureId(req.body.email)
         .then(data => {
-            console.log(data);
             if (data.rows[0].signatureId) {
                 req.session = {
                     userId: data.rows[0].id,
@@ -179,7 +184,6 @@ app.get("/profile", (req, res) => {
 app.post("/profile", (req, res) => {
     var goodUrl = checkUrl(req.body.homepage);
     var loweredCaseCity = lowCaseCity(req.body.city);
-
     if (req.body.age == "") {
         db.addProfile(null, loweredCaseCity, goodUrl, req.session.userId)
             .then(() => res.redirect("/petition"))
@@ -191,7 +195,10 @@ app.post("/profile", (req, res) => {
             goodUrl,
             req.session.userId
         )
-            .then(() => res.redirect("/petition"))
+            .then(() => {
+                req.session.justRegistered = false;
+                res.redirect("/petition");
+            })
             .catch(err => console.log(err));
     }
 });
@@ -247,10 +254,8 @@ app.get("/petition/signers", requireSignature, (req, res) => {
 
 app.get("/petition/signers/:city", (req, res) => {
     const city = req.params.city;
-    console.log(city);
     db.getCity(city)
         .then(data => {
-            console.log(data.rows);
             res.render("city", {
                 layout: "main",
                 signers: data.rows,
@@ -261,19 +266,21 @@ app.get("/petition/signers/:city", (req, res) => {
 });
 
 app.get("/profile/edit", (req, res) => {
-    //console.log(req.session.userId);
     db.getProfileInfo(req.session.userId)
         .then(data => {
-            //console.log(data);
-            res.render("edit_profile", {
-                layout: "main",
-                first: data.rows[0].first,
-                last: data.rows[0].last,
-                email: data.rows[0].email,
-                age: data.rows[0].age,
-                city: data.rows[0].city,
-                url: data.rows[0].url
-            });
+            if (data.rows[0]) {
+                res.render("edit_profile", {
+                    layout: "main",
+                    first: data.rows[0].first,
+                    last: data.rows[0].last,
+                    email: data.rows[0].email,
+                    age: data.rows[0].age,
+                    city: data.rows[0].city,
+                    url: data.rows[0].url
+                });
+            } else {
+                res.redirect("/profile");
+            }
         })
         .catch(err => console.log(err));
 });
