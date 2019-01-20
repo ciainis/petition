@@ -1,20 +1,27 @@
 {{> header}}
 
-<p>Edit your profile</p>
+<div class="petition-alt">
+    <form method="POST">
+        <input class="capitalize" type="text" name="first" value="{{first}}">
+        <p class="profile-info">Your first name</p>
+        <input class="capitalize" type="text" name="last" value="{{last}}" placeholder="Your last name">
+        <p class="profile-info">Your last name</p>
+        <input type="text" name="email" value="{{email}}">
+        <p class="profile-info">Your email address</p>
+        <input type="password" name="password" placeholder="*******">
+        <p class="profile-info">Your password</p>
+        <input type="text" name="age" value="{{age}}">
+        <p class="profile-info">Your age</p>
+        <input class="capitalize" type="text" name="city" value="{{city}}">
+        <p class="profile-info">Your city</p>
+        <input type="text" name="url" value="{{url}}">
+        <p class="profile-info">Your homepage</p>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button>Update your profile</button>
+    </form>
 
-<form method="POST">
-    <input type="text" name="first" value="{{first}}">
-    <input type="text" name="last" value="{{last}}">
-    <input type="text" name="email" value="{{email}}">
-    <input type="text" name="password" placeholder="password">
-    <input type="text" name="age" value="{{age}}">
-    <input type="text" name="city" value="{{city}}">
-    <input type="text" name="url" value="{{url}}">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button>UPDATE YOUR ACCOUNT</button>
-</form>
-
-<form action="/profile/delete" method="POST">
-    <button name="delete-signature">DELETE YOUR ACCOUNT</button>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-</form>
+    <form action="/profile/delete" method="POST">
+        <button name="delete-signature">Delete your profile</button>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </form>
+</div>

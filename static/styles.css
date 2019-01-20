@@ -3,35 +3,57 @@ body {
     text-align: center;
 }
 
-header {
-    text-align: right;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    background: black;
-    color: white;
+h1 {
+    font-size: 25px;
 }
 
-/* input {
-    height: 20px;
-    margin-bottom: 5px;
+input {
+    height: 25px;
+    width: 200px;
+    margin-bottom: 6px;
     border: 1px solid black;
+    font-size: 16px;
     text-align: center;
-} */
+}
 
-header a {
-    color: white;
+a {
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+figcaption {
+    margin: auto;
+    width: 400px;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: italic;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    text-decoration: underline;
+}
+
+.header-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.header-div a {
     text-decoration: none;
+    margin: 10px;
 }
 
 button {
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
     margin-top: 16px;
-    border-radius: 50px;
-    font-size: 20px;
-    font-weight: 400;
-    color: white;
     padding: 5px;
-    background: black;
+    width: 200px;
 }
 
 img {
@@ -39,22 +61,35 @@ img {
     height: auto;
 }
 
-.petition-text {
+.campaign {
     width: 50%;
     margin: auto;
-    font-weight: bold;
-    color: black;
     margin-bottom: 5%;
 }
 
-.thanks-text {
-    width: 400px;
-    margin: auto;
-    font-weight: bold;
+.petition {
+    margin-top: 40px;
 }
 
-.thanks-text a {
-    font-weight: normal;
+.petition input {
+    margin-top: 15px;
+}
+
+.profile-info {
+    font-style: italic;
+    margin: 0;
+}
+
+.petition-alt {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.petition-alt input {
+    margin-top: 15px;
 }
 
 form {
@@ -67,16 +102,16 @@ input::placeholder {
     font-style: italic;
 }
 
-form div {
-    margin-bottom: 16px;
-}
-
 #canvas {
     border: 1px solid black;
     margin-bottom: 16px;
 }
 
 #error {
+    color: red;
+}
+
+#error a {
     color: red;
 }
 
@@ -94,14 +129,37 @@ form div {
     margin: auto;
 }
 
-#tall-guy-signers {
-    margin-top: 20px;
+.link-button {
+    border: none;
+    text-decoration: underline;
+    margin: 0;
+    padding: 0;
 }
 
-#signers {
-    margin-top: 50px;
+.signers {
+    background: lightgray;
+    height: 400px;
     font-style: italic;
     font-weight: normal;
+    margin-top: 50px;
+    overflow: scroll;
+}
+
+.plain-link {
+    font-weight: normal;
+    text-transform: capitalize;
+}
+
+span {
+    text-transform: capitalize;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 @media (max-width: 768px) {

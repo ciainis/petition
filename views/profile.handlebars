@@ -1,13 +1,18 @@
-<div class="petition-text">
+{{> header}}
 
-<p>Tell us more about yourself</p>
+<div class="petition">
+
+<p>Hi <strong>{{first}}</strong>! Please tell us a bit more about yourself:</p>
 
 <form method="POST">
-    <input type="text" name="age" placeholder="Age">
-    <input type="text" name="city" placeholder="City">
-    <input type="text" name="homepage" placeholder="Homepage">
+    <input type="text" name="age">
+    <p class="profile-info">Your age</p>
+    <input type="text" name="city">
+    <p class="profile-info">Your city</p>
+    <input type="text" name="homepage">
+    <p class="profile-info">Your homepage</p>
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button name="continue">CREATE PROFILE</button>
+    <button name="continue">Create profile</button>
 </form>
 
-</div>
+</div class="petition">

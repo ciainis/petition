@@ -1,25 +1,23 @@
 {{> header}}
 
-<img id="tall-guy-signers" src="/the-tall-guy.jpg" alt="The Tall Guy">
+<div class="petition-alt">
+    <p>Thanks to all who signed our petition. We hope that every supermarket in Germany will soon guarantee easy checkouts for their customers!</p>
 
-<div class="thanks-text">
-    <p>Concerts are better without The Tall Guy! Here is the list of people who already signed the petition for Tall-Guy-free shows:</p>
-
-    <div id="signers">
+    <div class="signers">
 
         {{#each signers}}
 
         {{#if this.url}}
 
-        <p><a href="{{this.url}}">{{this.first}} {{this.last}}</a> {{this.age}} <a href="/petition/signers/{{this.city}}">{{this.city}}</a></p>
+        <p class="capitalize"><a class="plain-link" href="{{this.url}}">{{this.first}} {{this.last}}</a> {{this.age}} <a class="plain-link" href="/petition/signers/{{this.city}}">{{this.city}}</a></p>
 
         {{else}}
 
-        <p>{{this.first}} {{this.last}} {{this.age}} <a href="/petition/signers/{{this.city}}">{{this.city}}</a></p>
+        <p class="capitalize">{{this.first}} {{this.last}} {{this.age}} <a class="plain-link" href="/petition/signers/{{this.city}}">{{this.city}}</a></p>
 
         {{/if}}
 
         {{/each}}
     </div>
-    
+
 </div>

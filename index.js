@@ -96,9 +96,21 @@ var checkUrl = function(url) {
     }
 };
 
-//make sure that loweredcase cities are entered in the database
+//make sure that loweredcase cities, first and last names are entered in the database
 var lowCaseCity = function(city) {
     return city.toLowerCase();
+};
+
+var lowCaseFirst = function(first) {
+    return first.toLowerCase();
+};
+
+var lowCaseLast = function(last) {
+    return last.toLowerCase();
+};
+
+var lowCaseEmail = function(email) {
+    return email.toLowerCase();
 };
 
 app.get("/register", requireLoggedOutUser, (req, res) => {
@@ -108,13 +120,16 @@ app.get("/register", requireLoggedOutUser, (req, res) => {
 });
 
 app.post("/register", requireLoggedOutUser, (req, res) => {
+    var loweredCaseFirst = lowCaseFirst(req.body.first);
+    var loweredCaseLast = lowCaseLast(req.body.last);
+    var loweredCaseEmail = lowCaseEmail(req.body.email);
     bcrypt
         .hash(req.body.password)
         .then(hash => {
             return db.registerUser(
-                req.body.first,
-                req.body.last,
-                req.body.email,
+                loweredCaseFirst,
+                loweredCaseLast,
+                loweredCaseEmail,
                 hash
             );
         })
@@ -164,6 +179,9 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
         .then(bool => {
             if (bool == true) {
                 res.redirect("/petition");
+            } else {
+                req.session = null;
+                throw Error;
             }
         })
         .catch(err => {
@@ -177,6 +195,7 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
 
 app.get("/profile", (req, res) => {
     res.render("profile", {
+        first: req.session.first,
         layout: "main"
     });
 });
@@ -184,23 +203,13 @@ app.get("/profile", (req, res) => {
 app.post("/profile", (req, res) => {
     var goodUrl = checkUrl(req.body.homepage);
     var loweredCaseCity = lowCaseCity(req.body.city);
-    if (req.body.age == "") {
-        db.addProfile(null, loweredCaseCity, goodUrl, req.session.userId)
-            .then(() => res.redirect("/petition"))
-            .catch(err => console.log(err));
-    } else {
-        db.addProfile(
-            req.body.age,
-            loweredCaseCity,
-            goodUrl,
-            req.session.userId
-        )
-            .then(() => {
-                req.session.justRegistered = false;
-                res.redirect("/petition");
-            })
-            .catch(err => console.log(err));
-    }
+
+    db.addProfile(req.body.age, loweredCaseCity, goodUrl, req.session.userId)
+        .then(() => {
+            req.session.justRegistered = false;
+            res.redirect("/petition");
+        })
+        .catch(err => console.log(err));
 });
 
 app.get("/petition", requireNoSignature, (req, res) => {
@@ -286,20 +295,26 @@ app.get("/profile/edit", (req, res) => {
 });
 
 app.post("/profile/edit", (req, res) => {
+    var goodUrl = checkUrl(req.body.url);
+    var loweredCaseFirst = lowCaseFirst(req.body.first);
+    var loweredCaseLast = lowCaseLast(req.body.last);
+    var loweredCaseEmail = lowCaseEmail(req.body.email);
+    var loweredCaseCity = lowCaseCity(req.body.city);
+
     if (req.body.password != "") {
         bcrypt.hash(req.body.password).then(hash => {
             Promise.all([
                 db.updateUsers(
-                    req.body.first,
-                    req.body.last,
-                    req.body.email,
+                    loweredCaseFirst,
+                    loweredCaseLast,
+                    loweredCaseEmail,
                     hash,
                     req.session.userId
                 ),
                 db.updateUserProfiles(
                     req.body.age,
-                    req.body.city,
-                    req.body.url,
+                    loweredCaseCity,
+                    goodUrl,
                     req.session.userId
                 )
             ])
@@ -309,15 +324,15 @@ app.post("/profile/edit", (req, res) => {
     } else {
         Promise.all([
             db.updateUsersNoPass(
-                req.body.first,
-                req.body.last,
-                req.body.email,
+                loweredCaseFirst,
+                loweredCaseLast,
+                loweredCaseEmail,
                 req.session.userId
             ),
             db.updateUserProfiles(
                 req.body.age,
-                req.body.city,
-                req.body.url,
+                loweredCaseCity,
+                goodUrl,
                 req.session.userId
             )
         ])

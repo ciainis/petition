@@ -1,16 +1,15 @@
 {{> header}}
 
+<div class="petition-alt">
+    <img id="gif" src="{{gif}}" alt="thank you gif"/>
 
-<img id="gif" src="{{gif}}" alt="thank you gif"/>
-
-<div class="thanks-text">
     <p>Thank you for signing our petition!</p>
     <img id="signature" src="{{signature}}">
     <br>
     <p><a href="signers">See all {{numOfSigners}} signers</a></p>
 
     <form action="/delete-signature" method="POST">
-        <button name="delete-signature">DELETE YOUR SIGNATURE</button>
+        <button class="link-button" name="delete-signature">Delete your signature</button>
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
     </form>
 </div>

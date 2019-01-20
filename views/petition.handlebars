@@ -1,20 +1,21 @@
 {{> header}}
 
-<h1>Sign our petition to ban the The Tall Guy from all concerts!</h1>
+<div class="petition">
+    <img src="counter.jpeg" alt="small counter">
 
-<img src="/the-tall-guy-ban.jpg" alt="The Tall Guy">
+    <h1>Larger counters in every supermarket!</h1>
 
-<div class="petition-text">
-    <p>Please sign our petition to obtain the immediate ban of The Tall Guy from any live concerts.</p>
+    <p>Please sign here:</p>
+
     <form method="POST">
 
         {{#if err}}
-        <p id="error">Oops... something went wrong! Please sign again.</p>
+        <p id="error">Ops... something went wrong! Please sign again.</p>
         {{/if}}
 
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <canvas class="form-elem" id="canvas" height="100px" width="340px"></canvas>
         <input id="input-sign" type="hidden" name="signature">
-        <button class="form-elem">SUBMIT</button>
+        <button class="link-button">Submit</button>
     </form>
 </div>

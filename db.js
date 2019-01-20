@@ -1,6 +1,4 @@
 const spicedPg = require("spiced-pg");
-// const { dbUser, dbPass } = require("./secrets.json");
-// const db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/funkyduck`);
 
 let db;
 if (process.env.DATABASE_URL) {
@@ -39,10 +37,6 @@ module.exports.getSignature = function(signatureId) {
     ]);
 };
 
-// module.exports.getSignatureId = function(userId) {
-//     return db.query(`SELECT id FROM signatures WHERE user_id = $1`, [userId]);
-// };
-
 module.exports.registerUser = function(first, last, email, password) {
     return db.query(
         `INSERT INTO users (first, last, email, password)
@@ -51,16 +45,20 @@ module.exports.registerUser = function(first, last, email, password) {
     );
 };
 
-// module.exports.verifyPassword = function(email) {
-//     return db.query(`SELECT * FROM users WHERE email = $1`, [email]);
-// };
-
 module.exports.addProfile = function(age, city, url, userId) {
-    return db.query(
-        `INSERT INTO user_profiles (age, city, url, user_id)
-        VALUES ($1, $2, $3, $4)`,
-        [age, city, url, userId]
-    );
+    if (age == "") {
+        return db.query(
+            `INSERT INTO user_profiles (city, url, user_id)
+            VALUES ($1, $2, $3)`,
+            [city, url, userId]
+        );
+    } else {
+        return db.query(
+            `INSERT INTO user_profiles (age, city, url, user_id)
+            VALUES ($1, $2, $3, $4)`,
+            [age, city, url, userId]
+        );
+    }
 };
 
 module.exports.getCity = function(userCity) {
@@ -122,13 +120,27 @@ module.exports.updateUsersNoPass = function(first, last, email, userId) {
 };
 
 module.exports.updateUserProfiles = function(age, city, url, userId) {
-    db.query(
-        `INSERT INTO user_profiles (age, city, url, user_id)
-        VALUES($1, $2, $3, $4)
-        ON CONFLICT (user_id)
-        DO UPDATE SET age = $1, city = $2, url = $3`,
-        [age, city, url, userId]
-    );
+    if (age == "") {
+        return db
+            .query(
+                `INSERT INTO user_profiles (city, url, user_id)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (user_id)
+            DO UPDATE SET city = $1, url = $2`,
+                [city, url, userId]
+            )
+            .catch(err => console.log(err));
+    } else {
+        return db
+            .query(
+                `INSERT INTO user_profiles (age, city, url, user_id)
+            VALUES ($1, $2, $3, $4)
+            ON CONFLICT (user_id)
+            DO UPDATE SET age = $1, city = $2, url = $3`,
+                [age, city, url, userId]
+            )
+            .catch(err => console.log(err));
+    }
 };
 
 module.exports.deleteSignature = function(userId) {
@@ -142,5 +154,3 @@ module.exports.deleteSignature = function(userId) {
 module.exports.deleteProfile = function(userId) {
     return db.query(`DELETE FROM users WHERE id = $1`, [userId]);
 };
-
-module;

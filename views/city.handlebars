@@ -1,17 +1,23 @@
 {{> header}}
 
-<p>the people from {{city}} who signed</p>
+<div class="petition-alt">
+    <p>Many thanks to the people from <span>{{city}}</span> who care about smooth checkouts at german supermarkets:</p>
 
-{{#each signers}}
+    <div class="signers">
 
-{{#if this.url}}
+    {{#each signers}}
 
-<p><a href="{{this.url}}">{{this.first}} {{this.last}}</a> {{this.age}}</p>
+    {{#if this.url}}
 
-{{else}}
+    <p class="capitalize"><a class="plain-link" href="{{this.url}}">{{this.first}} {{this.last}}</a> {{this.age}}</p>
 
-<p>{{this.first}} {{this.last}} {{this.age}}</p>
+    {{else}}
 
-{{/if}}
+    <p class="capitalize">{{this.first}} {{this.last}} {{this.age}}</p>
 
-{{/each}}
+    {{/if}}
+
+    {{/each}}
+
+    <div class="signers">
+</div>
