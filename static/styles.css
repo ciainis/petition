@@ -67,6 +67,24 @@ img {
     margin-bottom: 5%;
 }
 
+.campaign input {
+    height: 20px;
+    width: 150px;
+    margin-bottom: 4px;
+    border: 1px solid black;
+    font-size: 16px;
+    text-align: center;
+}
+
+.campaign button {
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 5px;
+    width: 150px;
+}
+
 .petition {
     margin-top: 40px;
 }
@@ -137,7 +155,7 @@ input::placeholder {
 }
 
 .signers {
-    background: lightgray;
+    background: rgb(239, 239, 239);
     height: 400px;
     font-style: italic;
     font-weight: normal;
