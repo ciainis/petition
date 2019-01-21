@@ -10,10 +10,10 @@
     <p>Many supermarkets in Germany are equipped with counters that have tiny bagging areas. Since cashiers usually scan items at the speed of light, small counters can cause customers stress, confusion and other inconveniences at checkout. While people usually come up with good packing strategies, we still believe that wider packing areas would ensure everybody has a smooth checkout. <br> <br> <strong>Please join our campaign!</strong></p>
 
     <form method="POST">
-        <input type="text" name="first" placeholder="Fist Name">
-        <input type="text" name="last" placeholder="Last Name">
-        <input type="text" name="email" placeholder="E-mail address">
-        <input type="password" name="password" placeholder="Password">
+        <input type="text" name="first" placeholder="Fist Name" autocomplete="off">
+        <input type="text" name="last" placeholder="Last Name" autocomplete="off">
+        <input type="text" name="email" placeholder="E-mail address" autocomplete="off">
+        <input type="password" name="password" placeholder="Password" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <button name="sign-up">Sign up</button>
     </form>
