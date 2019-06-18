@@ -364,4 +364,4 @@ app.get("/logout", (req, res) => {
     res.redirect("/petition");
 });
 
-app.listen(process.env.PORT || 8080, () => console.log("petition listening!"));
+app.listen(process.env.PORT || 8080, () => console.log("petition listening"));
