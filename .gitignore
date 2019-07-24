@@ -2,4 +2,3 @@ node_modules
 .DS_Store
 package-lock.json
 secrets.json
-static/assets
