@@ -22,3 +22,6 @@ After registering (or logging in if already registered), users can sing (only on
 
 ### Additional
 Users are able to check who already signed the petition (in total or by city), add a personal profile or delete the signature.
+
+## Live petition
+https://supermarket-counters-petition.herokuapp.com/
